@@ -20,7 +20,7 @@ import com.github.joffryferrater.repositories.PatientRepository;
  * @author Joffry Ferrater
  *
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages={"com.github.joffryferrater", "com.axiomatics.spring.boot"})
 public class RadiographServiceApplication {
 
 	public static void main(String[] args) {

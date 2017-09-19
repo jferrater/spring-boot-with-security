@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -27,7 +28,7 @@ import com.axiomatics.spring.boot.pdp.response.PDPResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class RequestUtility {
+public class PdpService {
 
 	private static final String COLON_SEPARATOR = ":";
 
@@ -37,27 +38,25 @@ public class RequestUtility {
 
 	private static final String XACML_JSON = "application/xacml+json";
 
+	@Autowired
 	private PdpConfiguration config;
 
 	private static final String HTTPS = "https://";
 	private static final String PDP_ENDPOINT = "/asm-pdp/authorize";
 	private CloseableHttpClient client;
-	
-	public RequestUtility(PdpConfiguration config) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-		this.config = config;
-	    SSLContextBuilder builder = new SSLContextBuilder();
-	    builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-	    SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-	            builder.build());
-	     client = HttpClients.custom().setSSLSocketFactory(
-	            sslsf).build();
+
+	public PdpService() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+		SSLContextBuilder builder = new SSLContextBuilder();
+		builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
+		client = HttpClients.custom().setSSLSocketFactory(sslsf).build();
 	}
 
-	HttpResponse post(PDPRequest request) throws ClientProtocolException, IOException {
+	private HttpResponse post(PDPRequest request) throws ClientProtocolException, IOException {
 		HttpPost postRequest = new HttpPost(pdpEndpoint());
 		postRequest.addHeader(HttpHeaders.CONTENT_TYPE, XACML_JSON);
 		postRequest.addHeader(HttpHeaders.AUTHORIZATION, BASIC + new String(encodedAuth()));
-		
+
 		final String jsonBody = new ObjectMapper().writeValueAsString(request);
 		System.out.println("PDP Request Body ---------------------------------------------------- \n");
 		System.out.println(jsonBody);
@@ -66,17 +65,13 @@ public class RequestUtility {
 		return client.execute(postRequest);
 	}
 
-	public String pdpResponse(PDPRequest request) throws ClientProtocolException, IOException {
-		HttpResponse response = post(request);
-		return EntityUtils.toString(response.getEntity(), "UTF-8");
-	}
-	
 	public PDPResponse pdpResponseEntity(PDPRequest request) throws ClientProtocolException, IOException {
-		String responseBody = pdpResponse(request);
+		String responseBody = getResponseAsString(request);
 		System.out.println("PDP response ------------------------------------------------------------------------ \n");
 		System.out.println(responseBody);
 		return JsonUtility.getPDPResponse(responseBody);
 	}
+
 	private String pdpEndpoint() {
 		StringBuilder endpoint = new StringBuilder();
 		endpoint.append(HTTPS).append(config.getIp());
@@ -84,11 +79,20 @@ public class RequestUtility {
 		endpoint.append(PDP_ENDPOINT);
 		return endpoint.toString();
 	}
-	
+
 	private String encodedAuth() {
 		StringBuilder userPass = new StringBuilder();
 		userPass.append(config.getUsername()).append(COLON_SEPARATOR).append(config.getPassword());
 		byte[] encodedAuth = Base64.encodeBase64(userPass.toString().getBytes(Charset.forName(ISO_8859_1)));
 		return new String(encodedAuth);
+	}
+
+	public String getPdpResponse(PDPRequest request) throws ClientProtocolException, IOException {
+		return getResponseAsString(request);
+	}
+
+	private String getResponseAsString(PDPRequest request) throws ParseException, IOException {
+		HttpResponse response = post(request);
+		return EntityUtils.toString(response.getEntity(), "UTF-8");
 	}
 }

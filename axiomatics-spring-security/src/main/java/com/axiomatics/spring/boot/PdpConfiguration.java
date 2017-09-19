@@ -1,11 +1,9 @@
 package com.axiomatics.spring.boot;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @ConfigurationProperties("axiomatics.pdp.server")
-@PropertySource("classpath:pdp.properties")
 @Component
 public class PdpConfiguration {
 

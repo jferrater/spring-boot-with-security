@@ -1,8 +1,6 @@
 package com.github.joffryferrater.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.SecurityExpressionOperations;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -12,13 +10,13 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 import org.springframework.security.web.access.expression.WebSecurityExpressionRoot;
 import org.springframework.stereotype.Component;
 
-import com.axiomatics.spring.boot.RequestUtility;
+import com.github.joffryferrater.config.AxioConfig;
 
 @Component
 public class XACMLWebSecurityExpressionHandler extends DefaultWebSecurityExpressionHandler {
 
 	@Autowired
-	Configurations requestUtility;
+	AxioConfig configurations;
 	
 	private final AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
 
@@ -33,7 +31,7 @@ public class XACMLWebSecurityExpressionHandler extends DefaultWebSecurityExpress
 			FilterInvocation fi) {
 		WebSecurityExpressionRoot root = null;
 		try {
-			root = new XACMLWebSecurityExpressionRoot(authentication, fi, requestUtility.getRequestUtility());
+			root = new XACMLWebSecurityExpressionRoot(authentication, fi, configurations.getPdpService());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,9 +47,5 @@ public class XACMLWebSecurityExpressionHandler extends DefaultWebSecurityExpress
 													// Don't change
 		return root;
 	}
-//	
-//	@Bean
-//	RequestUtility requestUtil() throws Exception {
-//		return this.requestUtility.getRequestUtility();
-//	}
+
 }
