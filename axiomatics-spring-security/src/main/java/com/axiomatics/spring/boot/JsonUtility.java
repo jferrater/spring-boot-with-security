@@ -20,8 +20,6 @@ public class JsonUtility {
     }
 
     public static PDPResponse getPDPResponse(String responseBody) throws JsonParseException, JsonMappingException, IOException {
-    	System.out.println("Response ----------------------------------------------\n");
-    	System.out.println(responseBody);
     	return responseReader.readValue(responseBody, PDPResponse.class);
     }
 }

@@ -4,13 +4,13 @@ import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
 
-public abstract class AbstractXACMLSecurityExpressionRoot extends SecurityExpressionRoot
+public abstract class AbstractJSONXACMLSecurityExpressionRoot extends SecurityExpressionRoot
 		implements MethodSecurityExpressionOperations {
 
 	private Object filterObject;
 	private Object returnObject;
 	
-	public AbstractXACMLSecurityExpressionRoot(Authentication authentication) {
+	public AbstractJSONXACMLSecurityExpressionRoot(Authentication authentication) {
 		super(authentication);
 	}
 

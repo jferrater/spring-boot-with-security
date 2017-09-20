@@ -3,8 +3,6 @@ package com.axiomatics.spring.boot.pdp.request;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "AccessSubject" })
@@ -13,36 +11,86 @@ public class Request {
 	@JsonProperty("AccessSubject")
 	private AccessSubject accessSubject;
 
-	@JsonProperty("AccessSubject")
+	@JsonProperty("Action")
+	private Action action;
+	
+	@JsonProperty("Environment")
+	private Environment environment;
+	
+	@JsonProperty("Resource")
+	private Resource resource;
+
 	public AccessSubject getAccessSubject() {
 		return accessSubject;
 	}
-
-	@JsonProperty("AccessSubject")
-	public void setAccessSubject(AccessSubject accessSubject) {
-		this.accessSubject = accessSubject;
+	
+	public Request addAccessSubject(AccessSubject accessSubject) {
+		if(this.accessSubject == null) {
+			this.accessSubject = accessSubject;
+		} else {
+			this.accessSubject.addAllAttributes(accessSubject.getAttributes());
+		}
+		return this;
 	}
-
+	
 	public Request withAccessSubject(AccessSubject accessSubject) {
 		this.accessSubject = accessSubject;
 		return this;
 	}
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(accessSubject).toHashCode();
+	public Request addActionAttribute(Action action) {
+		if(this.action == null) {
+			this.action = action;
+		} else {
+			this.action.addAllAttributes(action.getAttributes());
+		}
+		return this;
+	}
+	
+	public Request withAction(Action action) {
+		this.action = action;
+		return this;
+	}
+	
+	public Request addEnvironment(Environment environment) {
+		if(this.environment == null) {
+			this.environment = environment;
+		} else {
+			this.environment.addAllAttributes(environment.getAttributes());
+		}
+		return this;
+	}
+	
+	public Request withEnvironment(Environment environment) {
+		this.environment = environment;
+		return this;
+	}
+	
+	public Request addResource(Resource resource) {
+		if(this.resource == null) {
+			this.resource = resource;
+		} else {
+			this.resource.addAllAttributes(resource.getAttributes());
+		}
+		return this;
+	}
+	
+	public Request withResource(Resource resource) {
+		this.resource = resource;
+		return this;
+	}
+	
+	public Action getAction() {
+		return action;
 	}
 
-	@Override
-	public boolean equals(Object other) {
-		if (other == this) {
-			return true;
-		}
-		if ((other instanceof Request) == false) {
-			return false;
-		}
-		Request rhs = ((Request) other);
-		return new EqualsBuilder().append(accessSubject, rhs.accessSubject).isEquals();
+	public Environment getEnvironment() {
+		return environment;
+	}
+
+
+	public Resource getResource() {
+		return resource;
 	}
 
 }

@@ -2,6 +2,8 @@ package com.axiomatics.spring.boot.pdp.request;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -15,7 +17,7 @@ public class Attribute {
 	@JsonProperty("AttributeId")
 	private String attributeId;
 	@JsonProperty("Value")
-	private Collection<Object> value = new ArrayList<Object>();
+	private List<Object> value = new ArrayList<Object>();
 	@JsonProperty("DataType")
 	private String dataType;
 
@@ -40,11 +42,11 @@ public class Attribute {
 	}
 
 	@JsonProperty("Value")
-	public void setValue(Collection<Object> value) {
+	public void setValue(List<Object> value) {
 		this.value = value;
 	}
 
-	public Attribute withValues(Collection<Object> value) {
+	public Attribute withValues(List<Object> value) {
 		this.value = value;
 		return this;
 	}
