@@ -1,4 +1,4 @@
-package com.axiomatics.spring.boot;
+package com.axiomatics.spring.boot.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

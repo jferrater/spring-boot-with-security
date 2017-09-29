@@ -10,16 +10,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonUtility {
 
-    private static ObjectMapper responseReader = new ObjectMapper();
+    private static ObjectMapper pdpResponseReader = new ObjectMapper();
 
     private JsonUtility(){}
     
     static {
-        responseReader.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        responseReader.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        pdpResponseReader.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        pdpResponseReader.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public static PDPResponse getPDPResponse(String responseBody) throws JsonParseException, JsonMappingException, IOException {
-    	return responseReader.readValue(responseBody, PDPResponse.class);
+    static PDPResponse getPDPResponse(String responseBody) throws JsonParseException, JsonMappingException, IOException {
+    	return pdpResponseReader.readValue(responseBody, PDPResponse.class);
     }
 }

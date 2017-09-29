@@ -23,6 +23,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.axiomatics.spring.boot.config.PdpConfiguration;
 import com.axiomatics.spring.boot.pdp.request.PDPRequest;
 import com.axiomatics.spring.boot.pdp.response.PDPResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +58,7 @@ public class PdpService {
 		postRequest.addHeader(HttpHeaders.CONTENT_TYPE, XACML_JSON);
 		postRequest.addHeader(HttpHeaders.AUTHORIZATION, BASIC + new String(encodedAuth()));
 
-		final String jsonBody = new ObjectMapper().writeValueAsString(request);
+		final String jsonBody = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(request);
 		System.out.println("PDP Request Body ---------------------------------------------------- \n");
 		System.out.println(jsonBody);
 		StringEntity requestEntity = new StringEntity(jsonBody, ContentType.APPLICATION_JSON);
@@ -65,7 +66,7 @@ public class PdpService {
 		return client.execute(postRequest);
 	}
 
-	public PDPResponse pdpResponseEntity(PDPRequest request) throws ClientProtocolException, IOException {
+	PDPResponse pdpResponseEntity(PDPRequest request) throws ClientProtocolException, IOException {
 		String responseBody = getResponseAsString(request);
 		System.out.println("PDP response ------------------------------------------------------------------------ \n");
 		System.out.println(responseBody);
@@ -87,7 +88,7 @@ public class PdpService {
 		return new String(encodedAuth);
 	}
 
-	public String getPdpResponse(PDPRequest request) throws ClientProtocolException, IOException {
+	String getPdpResponse(PDPRequest request) throws ClientProtocolException, IOException {
 		return getResponseAsString(request);
 	}
 

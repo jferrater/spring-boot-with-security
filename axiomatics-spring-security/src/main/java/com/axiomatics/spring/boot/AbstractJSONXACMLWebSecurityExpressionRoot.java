@@ -117,8 +117,7 @@ public abstract class AbstractJSONXACMLWebSecurityExpressionRoot extends WebSecu
 		if (accessSubjects == null) {
 			return;
 		}
-		accessSubjects
-				.forEach(as -> request.addAccessSubject(as));
+		accessSubjects.forEach(as -> request.addAccessSubject(as));
 	}
 
 	private void addEnvironmentAttributes(Request request) {

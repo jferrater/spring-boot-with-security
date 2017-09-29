@@ -1,5 +1,7 @@
 package com.github.joffryferrater.config;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,8 @@ import com.github.joffryferrater.security.XACMLWebSecurityExpressionHandler;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
  
 	private static final String REALM_NAME = "MY_REALM";
+	@Autowired
+	HttpServletRequest context;
 
 	@Autowired
 	XACMLWebSecurityExpressionHandler handler;
@@ -29,17 +33,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("admin").password("admin123").roles("ADMIN")
-        .and().withUser("user").password("user123").roles("USER");
+        .and().withUser("user").password("user123").roles("USER")
+        .and().withUser("denyUser").password("user123").roles("DENY_ME");
     }
      
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-  
     	http.csrf().disable()
-    	  .authorizeRequests().expressionHandler(handler())
-    	  //.anyRequest().fullyAuthenticated()
+    	  .authorizeRequests()
+    	  .expressionHandler(handler())
+    	  .antMatchers("/").permitAll()
           .antMatchers(HttpMethod.DELETE, "/**").access("hasRole('ADMIN')")
-          .antMatchers(HttpMethod.GET, "/**").access("XACMLDecisionURL('ACCESS-SUBJECT', 'Attributes.access_subject.user', 'string', {'Wella'})")
+          .antMatchers(HttpMethod.GET, "/doctors/**").access("XACMLDecisionURL('ACCESS-SUBJECT', 'Attributes.access_subject.user', 'string', {'doctor'})")
           .and().httpBasic().realmName(REALM_NAME).authenticationEntryPoint(getAuthBasicEntryPoint())
           .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//We don't need sessions to be created.
  
