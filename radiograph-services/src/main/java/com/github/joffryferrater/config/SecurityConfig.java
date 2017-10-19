@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     	  .expressionHandler(handler())
     	  .antMatchers("/").permitAll()
           .antMatchers(HttpMethod.DELETE, "/**").access("hasRole('ADMIN')")
-          .antMatchers(HttpMethod.GET, "/doctors/**").access("XACMLDecisionURL('ACCESS-SUBJECT', 'Attributes.access_subject.user', 'string', {'doctor'})")
+          .antMatchers(HttpMethod.GET, "/doctors/**").access("XACMLDecisionURL('ACCESS-SUBJECT', 'Attributes.access_subject.group', 'string', {'doctor'})")
           .and().httpBasic().realmName(REALM_NAME).authenticationEntryPoint(getAuthBasicEntryPoint())
           .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//We don't need sessions to be created.
  

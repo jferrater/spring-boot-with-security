@@ -38,7 +38,9 @@ public class XACMLWebSecurityExpressionRoot extends AbstractJSONXACMLWebSecurity
 		 */
 		Resource resource = new Resource();
 		Attribute attribute = new Attribute();
-		attribute.withAttributeId("urn:oasis:names:tc:xacml:1.0:resource:resource-id").withDataType("string").withValues(endpoint);
+		attribute.withAttributeId("urn:oasis:names:tc:xacml:1.0:resource:resource-id")
+				 .withDataType("string")
+				 .withValues(endpoint);
 		resource.withAttributes(attribute);
 		return Arrays.asList(resource);
 	}
